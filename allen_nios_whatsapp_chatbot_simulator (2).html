@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALLEN Career Institute - NIOS Chatbot Simulator</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons for aesthetics -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Custom scrollbar style for WhatsApp Chat feel */
+    .whatsapp-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .whatsapp-scroll::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .whatsapp-scroll::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+    .whatsapp-bg {
+      background-color: #efeae2;
+      background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+      background-repeat: repeat;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col font-sans text-slate-800 antialiased">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="bg-emerald-600 text-white p-2.5 rounded-xl flex items-center justify-center">
+        <i class="fa-solid fa-graduation-cap text-xl"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-lg text-slate-900 tracking-tight flex items-center gap-2">
+          ALLEN Career Institute
+          <span class="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">NIOS Desk</span>
+        </h1>
+        <p class="text-xs text-slate-500">Official WhatsApp Chatbot Flow Mockup & Simulator</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="resetFlow()" class="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-700 hover:bg-rose-100 rounded-lg text-sm font-medium transition-all duration-200 border border-rose-100">
+        <i class="fa-solid fa-arrow-rotate-left"></i> Reset Simulation
+      </button>
+      <a href="https://www.allen.ac.in/NIOS" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg text-sm font-medium transition-all duration-200 border border-emerald-100">
+        <i class="fa-solid fa-globe"></i> allen.ac.in/NIOS
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Split Layout -->
+  <main class="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden">
+    
+    <!-- Left Dashboard / Controller Panel -->
+    <div class="w-full lg:w-[420px] bg-white border-r border-slate-200 flex flex-col p-6 overflow-y-auto shrink-0 gap-6">
+      
+      <!-- Current Session Info Block -->
+      <div>
+        <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Live User Session Database</h3>
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3.5">
+          <div class="flex justify-between items-center pb-2 border-b border-slate-200">
+            <span class="text-xs font-medium text-slate-500">Flow Phase</span>
+            <span id="state-phase" class="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">Onboarding</span>
+          </div>
+          
+          <div class="grid grid-cols-1 gap-2.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-solid fa-user w-4 text-slate-400"></i> Full Name</span>
+              <span id="data-name" class="font-semibold text-slate-800 italic text-slate-400">Waiting for input...</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-solid fa-envelope w-4 text-slate-400"></i> Email</span>
+              <span id="data-email" class="font-semibold text-slate-800 italic text-slate-400">Waiting for input...</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-solid fa-school w-4 text-slate-400"></i> Target Class</span>
+              <span id="data-class" class="font-semibold text-slate-800 italic text-slate-400">Waiting for selection...</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-solid fa-clipboard w-4 text-slate-400"></i> Last School Board</span>
+              <span id="data-board" class="font-semibold text-slate-800 italic text-slate-400">Waiting for selection...</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-solid fa-atom w-4 text-slate-400"></i> Chosen Stream</span>
+              <span id="data-stream" class="font-semibold text-slate-800 italic text-slate-400">Waiting for selection...</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 flex items-center gap-1.5"><i class="fa-solid fa-map-location-dot w-4 text-slate-400"></i> Location</span>
+              <span id="data-location" class="font-semibold text-slate-800 italic text-slate-400">Waiting for input...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Navigate Sandbox Shortcuts -->
+      <div>
+        <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Simulator Shortcuts</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="skipOnboarding()" class="p-2.5 bg-sky-50 text-sky-700 hover:bg-sky-100 rounded-lg text-xs font-semibold border border-sky-200 transition-all text-center">
+            ⚡ Bypass Onboarding
+          </button>
+          <button onclick="triggerMainMenu()" id="shortcut-mainmenu" disabled class="p-2.5 bg-slate-50 text-slate-400 rounded-lg text-xs font-semibold border border-slate-200 transition-all text-center cursor-not-allowed">
+            🏠 Jump to Main Menu
+          </button>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2 text-center">Bypassing fills mock data for a rapid demo.</p>
+      </div>
+
+      <!-- Flow Architecture Context -->
+      <div class="mt-auto">
+        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100 text-xs text-emerald-800 space-y-2">
+          <p class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Flow Correctness Validation</p>
+          <p class="text-emerald-700 leading-relaxed text-justify">
+            Every leaf node features dynamic back-navigation support matching the revised layout. It includes multi-step review, customizable board options, resource center indices with direct redirections, and integrated FAQs.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Mock WhatsApp Interface -->
+    <div class="flex-1 flex flex-col bg-slate-200 min-h-0 relative">
+      
+      <!-- WhatsApp Header -->
+      <div class="bg-[#075E54] text-white px-4 py-3 flex items-center justify-between shrink-0 shadow-md z-10">
+        <div class="flex items-center gap-3">
+          <button class="md:hidden text-white mr-1 text-lg">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <!-- Custom ALLEN verified mock avatar -->
+          <div class="relative w-10 h-10 bg-white rounded-full flex items-center justify-center border border-emerald-700 shadow overflow-hidden">
+            <span class="text-emerald-800 font-black text-[10px]">ALLEN</span>
+            <div class="absolute bottom-0 right-0 bg-emerald-500 w-3 h-3 rounded-full border-2 border-white flex items-center justify-center"></div>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-sm tracking-wide">ALLEN Career Institute</span>
+              <i class="fa-solid fa-circle-check text-sky-400 text-xs" title="Official Verified Helpdesk"></i>
+            </div>
+            <span class="text-xs text-emerald-200 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span>
+              Online Helpline
+            </span>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-5 text-emerald-100 text-sm">
+          <i class="fa-solid fa-video cursor-pointer hover:text-white"></i>
+          <i class="fa-solid fa-phone cursor-pointer hover:text-white"></i>
+          <i class="fa-solid fa-ellipsis-vertical cursor-pointer hover:text-white"></i>
+        </div>
+      </div>
+
+      <!-- Chat Canvas (WhatsApp Background) -->
+      <div id="chat-scroller" class="flex-1 whatsapp-bg overflow-y-auto p-4 md:p-6 space-y-4 whatsapp-scroll flex flex-col">
+        <!-- Messages get injected here -->
+      </div>
+
+      <!-- System Typing Indicator overlay -->
+      <div id="typing-indicator" class="absolute bottom-[72px] left-6 hidden bg-white/90 backdrop-blur-sm shadow px-3 py-1.5 rounded-full text-xs text-slate-600 flex items-center gap-2 border border-slate-200/50">
+        <span class="flex gap-1">
+          <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce"></span>
+          <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+          <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+        </span>
+        ALLEN Helpdesk typing...
+      </div>
+
+      <!-- Mock Message Input Bar -->
+      <div class="bg-[#f0f2f5] px-4 py-3 border-t border-slate-300 flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-3 text-slate-600">
+          <button class="hover:text-slate-800"><i class="fa-regular fa-face-smile text-xl"></i></button>
+          <button class="hover:text-slate-800"><i class="fa-solid fa-plus text-xl"></i></button>
+        </div>
+        
+        <form id="chat-form" onsubmit="handleFormSubmit(event)" class="flex-1 flex gap-2">
+          <input 
+            type="text" 
+            id="chat-input" 
+            placeholder="Type your response..." 
+            autocomplete="off"
+            class="flex-1 bg-white border border-slate-300/60 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-emerald-600 transition-all placeholder:text-slate-400"
+          >
+          <button 
+            type="submit" 
+            class="bg-emerald-600 text-white w-9 h-9 rounded-full flex items-center justify-center shadow hover:bg-emerald-700 transition-all shrink-0 active:scale-95"
+          >
+            <i class="fa-solid fa-paper-plane text-sm"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // --- CHAT STATE MACHINE CONFIGURATION ---
+    let flowState = {
+      userProfile: {
+        name: "",
+        email: "",
+        class: "",
+        board: "",
+        stream: "",
+        location: ""
+      },
+      currentPhase: "ONBOARDING", // "ONBOARDING", "MAIN_MENU", "SUBCATEGORY"
+      onboardingStep: 0, // Steps: 0: Name, 1: Email, 2: Class, 3: Board, 4: Stream, 5: Location, 6: Confirmation Step
+      navigationHistory: [], // Stack tracking for 🔙 Previous Menu
+      customBoardFlag: false // Tracks if user selected "Other" board and needs to type it
+    };
+
+    // DOM References
+    const chatScroller = document.getElementById('chat-scroller');
+    const chatInput = document.getElementById('chat-input');
+    const typingIndicator = document.getElementById('typing-indicator');
+    
+    // Format timestamp
+    function getFormattedTime() {
+      const date = new Date();
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; 
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      return `${hours}:${minutes} ${ampm}`;
+    }
+
+    // Append standard message bubble to the panel
+    function appendMessage(sender, text, isCustomComponent = false) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `flex w-full mb-3 ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+      
+      const bubbleClass = sender === 'user' 
+        ? 'bg-[#dcf8c6] text-slate-800 rounded-l-lg rounded-br-lg ml-12 shadow-sm border border-[#c1f3a2]/40' 
+        : 'bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50';
+
+      const timeStamp = getFormattedTime();
+
+      if (isCustomComponent) {
+        msgDiv.innerHTML = text;
+      } else {
+        // Simple Text Bubble with WhatsApp markdown formatting (e.g. *bold*)
+        const formattedText = text
+          .replace(/\*(.*?)\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+
+        msgDiv.innerHTML = `
+          <div class="${bubbleClass} px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">${formattedText}</p>
+            <div class="text-[9px] text-slate-400 mt-1 text-right select-none">
+              ${timeStamp}
+              ${sender === 'user' ? '<i class="fa-solid fa-check-double text-sky-500 ml-1"></i>' : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      chatScroller.appendChild(msgDiv);
+      chatScroller.scrollTop = chatScroller.scrollHeight;
+    }
+
+    // Mock Typing Animation before Response
+    function triggerBotResponse(htmlContent, delay = 600) {
+      typingIndicator.classList.remove('hidden');
+      setTimeout(() => {
+        typingIndicator.classList.add('hidden');
+        appendMessage('bot', htmlContent, true);
+      }, delay);
+    }
+
+    // --- MAIN FLOW ROUTINES ---
+
+    // Boot execution
+    window.onload = function() {
+      startOnboarding();
+    }
+
+    // Restart/Clean resets
+    function resetFlow() {
+      flowState = {
+        userProfile: { name: "", email: "", class: "", board: "", stream: "", location: "" },
+        currentPhase: "ONBOARDING",
+        onboardingStep: 0,
+        navigationHistory: [],
+        customBoardFlag: false
+      };
+      
+      chatScroller.innerHTML = "";
+      updateProfileDisplay();
+      
+      document.getElementById('shortcut-mainmenu').disabled = true;
+      document.getElementById('shortcut-mainmenu').className = "p-2.5 bg-slate-50 text-slate-400 rounded-lg text-xs font-semibold border border-slate-200 transition-all text-center cursor-not-allowed";
+      
+      startOnboarding();
+    }
+
+    // Onboarding backwards logic step helper
+    function handleOnboardingBack() {
+      if (flowState.onboardingStep > 0) {
+        flowState.onboardingStep--;
+        
+        // Clear value of the previous step
+        const steps = ['name', 'email', 'class', 'board', 'stream', 'location'];
+        flowState.userProfile[steps[flowState.onboardingStep]] = "";
+        flowState.customBoardFlag = false;
+        
+        updateProfileDisplay();
+        dispatchOnboardingStep();
+      }
+    }
+
+    // Global reset action
+    function handleGlobalReset() {
+      appendMessage('user', '🔄 Reset');
+      resetFlow();
+    }
+
+    // Dispatcher for current onboarding question
+    function dispatchOnboardingStep() {
+      let stepHtml = "";
+      const step = flowState.onboardingStep;
+
+      if (step === 0) {
+        stepHtml = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              Welcome to the <strong>ALLEN Career Institute</strong>. 🎓 This is your dedicated WhatsApp helpline for NIOS (National Institute of Open Schooling) related information.<br><br>
+              Let's get you set up. To assist you better, please provide a few quick details.<br><br>
+              <strong>Step 1:</strong> Please enter your <strong>Full Name</strong>.
+            </p>
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (step === 1) {
+        stepHtml = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              Thanks! 📝<br><br>
+              <strong>Step 2:</strong> Please enter your <strong>Email Address</strong>.
+            </p>
+            <div class="mt-3 flex gap-2">
+              <button onclick="handleOnboardingBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-chevron-left text-[10px]"></i> Back</button>
+              <button onclick="handleGlobalReset()" class="flex-1 bg-rose-50 border border-rose-100 hover:bg-rose-100 text-rose-700 font-bold py-1.5 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-arrow-rotate-left text-[10px]"></i> Reset</button>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (step === 2) {
+        stepHtml = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              Perfect. 🎯<br><br>
+              <strong>Step 3:</strong> Which class are you seeking admission for in the 2026-27 session?
+            </p>
+            <div class="mt-3 flex flex-col gap-1.5 max-h-52 overflow-y-auto pr-1">
+              <button onclick="handleOptionSelect('Class 6')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>Class 6</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('Class 7')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>Class 7</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('Class 8')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>Class 8</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('Class 9')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>Class 9</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('Class 10')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>Class 10</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('Class 11')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>Class 11</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('Class 12')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>Class 12</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('12th Passed')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span class="font-bold text-emerald-900">12th Passed</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+            </div>
+            <div class="mt-3 pt-2 border-t flex gap-2">
+              <button onclick="handleOnboardingBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-chevron-left text-[10px]"></i> Back</button>
+              <button onclick="handleGlobalReset()" class="flex-1 bg-rose-50 border border-rose-100 hover:bg-rose-100 text-rose-700 font-bold py-1 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-arrow-rotate-left text-[10px]"></i> Reset</button>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-1 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (step === 3) {
+        stepHtml = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              Got it. 🏢<br><br>
+              <strong>Step 4:</strong> Which was your last passed or appearing school board?
+            </p>
+            <div class="mt-3 grid grid-cols-2 gap-1.5">
+              <button onclick="handleOptionSelect('CBSE')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-2 rounded-lg border border-emerald-200 transition text-xs text-center">CBSE</button>
+              <button onclick="handleOptionSelect('ICSE')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-2 rounded-lg border border-emerald-200 transition text-xs text-center">ICSE</button>
+              <button onclick="handleOptionSelect('NIOS')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-2 rounded-lg border border-emerald-200 transition text-xs text-center">NIOS</button>
+              <button onclick="handleOptionSelect('State Board')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-2 rounded-lg border border-emerald-200 transition text-xs text-center">State Board</button>
+              <button onclick="handleOptionSelect('Open State Board')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-2 rounded-lg border border-emerald-200 transition text-xs text-center">Open State Board</button>
+              <button onclick="handleOptionSelect('Other')" class="bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold py-1.5 px-2 rounded-lg border border-amber-200 transition text-xs text-center">Other</button>
+            </div>
+            <div class="mt-3 pt-2 border-t flex gap-2">
+              <button onclick="handleOnboardingBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-chevron-left text-[10px]"></i> Back</button>
+              <button onclick="handleGlobalReset()" class="flex-1 bg-rose-50 border border-rose-100 hover:bg-rose-100 text-rose-700 font-bold py-1 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-arrow-rotate-left text-[10px]"></i> Reset</button>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-1 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (step === 4) {
+        stepHtml = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              Great. Now let's map your goals. 🚀<br><br>
+              <strong>Step 5:</strong> Select your stream:
+            </p>
+            <div class="mt-3 flex flex-col gap-1.5">
+              <button onclick="handleOptionSelect('JEE')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-2 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>JEE</span> <i class="fa-solid fa-circle-nodes text-[11px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('NEET')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-2 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>NEET</span> <i class="fa-solid fa-heart-pulse text-[11px]"></i>
+              </button>
+              <button onclick="handleOptionSelect('Other')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-2 px-3 rounded-lg border border-emerald-200 transition text-xs flex justify-between items-center">
+                <span>Other</span> <i class="fa-solid fa-shuffle text-[11px]"></i>
+              </button>
+            </div>
+            <div class="mt-3 pt-2 border-t flex gap-2">
+              <button onclick="handleOnboardingBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-chevron-left text-[10px]"></i> Back</button>
+              <button onclick="handleGlobalReset()" class="flex-1 bg-rose-50 border border-rose-100 hover:bg-rose-100 text-rose-700 font-bold py-1 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-arrow-rotate-left text-[10px]"></i> Reset</button>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-1 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (step === 5) {
+        stepHtml = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              Just one last detail! 📍<br><br>
+              <strong>Step 6:</strong> Please enter your <strong>City and State</strong>.
+            </p>
+            <div class="mt-3 flex gap-2">
+              <button onclick="handleOnboardingBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-chevron-left text-[10px]"></i> Back</button>
+              <button onclick="handleGlobalReset()" class="flex-1 bg-rose-50 border border-rose-100 hover:bg-rose-100 text-rose-700 font-bold py-1.5 rounded text-center text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-arrow-rotate-left text-[10px]"></i> Reset</button>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      }
+
+      triggerBotResponse(stepHtml);
+    }
+
+    // Step 0 initiation
+    function startOnboarding() {
+      flowState.currentPhase = "ONBOARDING";
+      flowState.onboardingStep = 0;
+      dispatchOnboardingStep();
+    }
+
+    // Capture Free Text Input or Interactive Button Input
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const text = chatInput.value.trim();
+      if (!text) return;
+      
+      chatInput.value = "";
+      processUserInput(text);
+    }
+
+    // Core business router logic
+    function processUserInput(input) {
+      // 1. Output the user message to chat UI
+      appendMessage('user', input);
+
+      if (flowState.currentPhase === "ONBOARDING") {
+        handleOnboardingProcess(input);
+      } else {
+        // Simple Fallback text analyzer for general input when menus are loaded
+        handleGeneralInputFallback(input);
+      }
+    }
+
+    // Onboarding Form Wizard
+    function handleOnboardingProcess(input) {
+      const step = flowState.onboardingStep;
+
+      // Other custom board logic branch hook
+      if (flowState.customBoardFlag) {
+        flowState.userProfile.board = input;
+        flowState.customBoardFlag = false;
+        flowState.onboardingStep = 4;
+        updateProfileDisplay();
+        dispatchOnboardingStep();
+        return;
+      }
+
+      if (step === 0) {
+        // Name captured
+        flowState.userProfile.name = input;
+        flowState.onboardingStep = 1;
+        updateProfileDisplay();
+        dispatchOnboardingStep();
+
+      } else if (step === 1) {
+        // Validate Email roughly
+        if (!input.includes('@') || !input.includes('.')) {
+          const emailError = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed text-rose-700 font-medium">
+                ⚠️ Invalid Email. Please enter a valid Email Address. (e.g. name@domain.com)
+              </p>
+              <div class="text-[9px] text-slate-400 mt-1 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          triggerBotResponse(emailError);
+          return;
+        }
+
+        flowState.userProfile.email = input;
+        flowState.onboardingStep = 2;
+        updateProfileDisplay();
+        dispatchOnboardingStep();
+
+      } else if (step === 5) {
+        // Location Captured - onboarding details complete, dispatch review!
+        flowState.userProfile.location = input;
+        flowState.onboardingStep = 6;
+        updateProfileDisplay();
+        dispatchConfirmationStep();
+      }
+    }
+
+    // Handle standard selection button clicks
+    function handleOptionSelect(value) {
+      appendMessage('user', value);
+      
+      const step = flowState.onboardingStep;
+
+      if (step === 2) {
+        // Class captured
+        flowState.userProfile.class = value;
+        flowState.onboardingStep = 3;
+        updateProfileDisplay();
+        dispatchOnboardingStep();
+
+      } else if (step === 3) {
+        // Board captured
+        if (value === 'Other') {
+          flowState.customBoardFlag = true;
+          updateProfileDisplay();
+          const customPrompt = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                Please type the name of your school board.
+              </p>
+              <div class="text-[9px] text-slate-400 mt-1 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          triggerBotResponse(customPrompt);
+        } else {
+          flowState.userProfile.board = value;
+          flowState.onboardingStep = 4;
+          updateProfileDisplay();
+          dispatchOnboardingStep();
+        }
+
+      } else if (step === 4) {
+        // Stream captured
+        flowState.userProfile.stream = value;
+        flowState.onboardingStep = 5;
+        updateProfileDisplay();
+        dispatchOnboardingStep();
+      }
+    }
+
+    // Step 7 - Profile Submission Confirmation Screen
+    function dispatchConfirmationStep() {
+      const up = flowState.userProfile;
+      const confirmHtml = `
+        <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+          <p class="text-sm leading-relaxed">
+            📋 <strong>Please review your profile details:</strong><br><br>
+            • <strong>Name:</strong> ${up.name}<br>
+            • <strong>Email:</strong> ${up.email}<br>
+            • <strong>Class:</strong> ${up.class}<br>
+            • <strong>Previous Board:</strong> ${up.board}<br>
+            • <strong>Stream:</strong> ${up.stream}<br>
+            • <strong>Location:</strong> ${up.location}<br><br>
+            Would you like to submit these details to unlock the Main Menu?
+          </p>
+          <div class="mt-4 flex flex-col gap-2">
+            <button onclick="confirmAndProceed()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3.5 rounded-lg border border-emerald-700 transition-all text-xs flex items-center justify-between shadow-sm">
+              <span>✅ Confirm & Proceed</span> <i class="fa-solid fa-circle-check text-xs"></i>
+            </button>
+            <button onclick="resetFlow()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition-all text-xs flex items-center justify-between">
+              <span>🔄 Edit Details / Reset</span> <i class="fa-solid fa-arrow-rotate-left text-xs"></i>
+            </button>
+          </div>
+          <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+        </div>
+      `;
+      triggerBotResponse(confirmHtml);
+    }
+
+    // Finalize onboarding phase
+    function confirmAndProceed() {
+      appendMessage('user', '✅ Confirm & Proceed');
+      
+      flowState.currentPhase = "MAIN_MENU";
+      updateProfileDisplay();
+
+      // Enable Main Menu Shortcut Link
+      const sLink = document.getElementById('shortcut-mainmenu');
+      if (sLink) {
+        sLink.removeAttribute('disabled');
+        sLink.className = "p-2.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg text-xs font-semibold border border-emerald-200 transition-all text-center cursor-pointer";
+      }
+
+      // Dispatch Phase 2 Menu Block
+      dispatchMainMenu();
+    }
+
+    // Render the interactive Main Menu list
+    function dispatchMainMenu() {
+      flowState.currentPhase = "MAIN_MENU";
+      updateProfileDisplay();
+
+      // Clear navigation history stack on entering absolute main menu
+      flowState.navigationHistory = [];
+
+      const menuMessage = `
+        <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+          <p class="text-sm leading-relaxed">
+            Thank you for sharing your details! Your profile has been updated. 🎉<br><br>
+            To Know more about the NIOS Board, Please select from the Below Options:
+          </p>
+          <div class="mt-4 space-y-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wide border-b pb-1">Menu Options (List Message):</div>
+            <button onclick="handleMenuSelection('ABOUT_NIOS')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-slate-200 transition-all text-xs flex items-center gap-2">
+              <span>ℹ️ About NIOS Board</span>
+            </button>
+            <button onclick="handleMenuSelection('ADMISSION')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-slate-200 transition-all text-xs flex items-center gap-2">
+              <span>🎓 NIOS Admission & Enrollment</span>
+            </button>
+            <button onclick="handleMenuSelection('EXAM_DETAILS')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-slate-200 transition-all text-xs flex items-center gap-2">
+              <span>📅 NIOS Examination Details</span>
+            </button>
+            <button onclick="handleMenuSelection('STUDY_CENTERS')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-emerald-200 transition-all text-xs flex items-center gap-2">
+              <span>🏫 About NIOS Study Centers (AI)</span>
+            </button>
+            <button onclick="handleMenuSelection('SUPPORT_ALLEN')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-emerald-200 transition-all text-xs flex items-center gap-2">
+              <span>🤝 Support at ALLEN for NIOS</span>
+            </button>
+            <button onclick="handleMenuSelection('WEBINAR')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-emerald-200 transition-all text-xs flex items-center gap-2">
+              <span>🌐 Attend a Live NIOS Webinar</span>
+            </button>
+            <button onclick="handleMenuSelection('VIDEOS')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-emerald-200 transition-all text-xs flex items-center gap-2">
+              <span>🎥 Informational NIOS Videos</span>
+            </button>
+            <a href="https://www.allen.ac.in/nios/admissions.asp" target="_blank" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold py-2.5 px-3.5 rounded-lg border border-emerald-200 transition-all text-xs flex items-center justify-between shadow-sm">
+              <span>📝 Register interest for admission in NIOS Board</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+            <button onclick="handleMenuSelection('RESOURCE_CENTER')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-emerald-200 transition-all text-xs flex items-center gap-2">
+              <span>📂 NIOS Resource Center</span>
+            </button>
+            <button onclick="handleMenuSelection('NEED_HELP')" class="w-full text-left bg-slate-50 hover:bg-rose-50 text-slate-700 font-bold py-2.5 px-3.5 rounded-lg border border-slate-200 transition-all text-xs flex items-center gap-2 border-dashed">
+              <span>❓ Need Help?</span>
+            </button>
+          </div>
+          <div class="text-[9px] text-slate-400 mt-3 text-right select-none">${getFormattedTime()}</div>
+        </div>
+      `;
+      triggerBotResponse(menuMessage);
+    }
+
+    // Helper for rendering Quick Action Buttons (Footer component reuse based on revised rules)
+    function getQuickActionButtonsHTML(showPrevious = true) {
+      return `
+        <div class="mt-3.5 p-2 bg-slate-50 rounded-xl border border-slate-100 space-y-1.5">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block px-1.5">Quick Action Buttons:</span>
+          <a href="https://www.allen.ac.in/nios/admissions.asp" target="_blank" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-2.5 rounded-lg border border-emerald-100 transition-all text-xs flex items-center justify-between">
+            <span>📝 Register your interest for admission in NIOS Board</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+          </a>
+          <a href="https://myallen.in/nioswebinar" target="_blank" class="w-full text-left bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold py-1.5 px-2.5 rounded-lg border border-indigo-100 transition-all text-xs flex items-center justify-between">
+            <span>🌐 Know more: Register for NIOS Live webinar by ALLEN Expert.</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+          </a>
+          <div class="flex gap-1.5 mt-2">
+            <button onclick="triggerCallback()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-1.5 rounded text-center text-[10px] flex items-center justify-center gap-1"><i class="fa-solid fa-phone"></i> Call Back</button>
+            ${showPrevious ? `<button onclick="navigateBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-1.5 rounded text-center text-[10px]">🔙 Prev Menu</button>` : ''}
+            <button onclick="navigateMainMenu()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-1.5 rounded text-center text-[10px]">🏠 Main Menu</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Router for Main Menu item clicks
+    function handleMenuSelection(selectionKey) {
+      flowState.navigationHistory.push("MAIN_MENU");
+      flowState.currentPhase = "SUBCATEGORY";
+
+      let botResponse = "";
+
+      switch(selectionKey) {
+        case 'ABOUT_NIOS':
+          appendMessage('user', 'ℹ️ About NIOS Board');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                The National Institute of Open Schooling (NIOS) is a highly flexible national school board under the Ministry of Education, Government of India. It is recognized completely at par with CBSE, ICSE, and State Boards for higher education and competitive exams.<br><br>
+                🌍 Today, NIOS is the world's largest open schooling system, operating through 20+ Regional Centers and over 7,000+ study centers globally.<br><br>
+                <strong>To know more, select an option:</strong>
+              </p>
+              <div class="mt-4 space-y-2">
+                <button onclick="handleAboutNiosSelection('RECOGNITION')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                  <span>📜 Board Recognition</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                </button>
+                <button onclick="handleAboutNiosSelection('ACCEPTANCE')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                  <span>✅ Exam Acceptance</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                </button>
+                <button onclick="handleAboutNiosSelection('BENEFITS')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                  <span>🌟 Key Benefits of NIOS</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                </button>
+                <button onclick="triggerCallback()" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                  <span>📞 Request a Callback</span> <i class="fa-solid fa-phone text-[10px]"></i>
+                </button>
+              </div>
+              <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between gap-2">
+                <button onclick="navigateBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🔙 Previous Menu</button>
+                <button onclick="navigateMainMenu()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🏠 Main Menu</button>
+              </div>
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+
+        case 'ADMISSION':
+          appendMessage('user', '🎓 NIOS Admission & Enrollment');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                Choose from the options below to get registered or find details on standard courses:
+              </p>
+              <div class="mt-4 space-y-2">
+                <button onclick="handleAdmissionSelection('COURSES')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-slate-200 transition-all text-xs flex items-center gap-2">
+                  <span>📚 Explore the Courses</span>
+                </button>
+                <button onclick="handleAdmissionSelection('INTERESTED')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2.5 px-3.5 rounded-lg border border-slate-200 transition-all text-xs flex items-center gap-2">
+                  <span>📝 Interested to take Admission in NIOS</span>
+                </button>
+              </div>
+              <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between gap-2">
+                <button onclick="navigateMainMenu()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🏠 Main Menu</button>
+              </div>
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+
+        case 'EXAM_DETAILS':
+          appendMessage('user', '📅 NIOS Examination Details');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                Please select an exam category to learn more:
+              </p>
+              <div class="mt-4 space-y-2">
+                <button onclick="handleExamSelection('PUBLIC')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                  <span>📅 Public (Board) Exams</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                </button>
+                <button onclick="handleExamSelection('INTERNAL')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                  <span>📝 Internal Assessment (TMA & PCP)</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                </button>
+                <button onclick="triggerCallback()" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                  <span>📞 Request a Callback</span> <i class="fa-solid fa-phone text-[10px]"></i>
+                </button>
+              </div>
+              <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between gap-2">
+                <button onclick="navigateBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🔙 Previous Menu</button>
+                <button onclick="navigateMainMenu()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🏠 Main Menu</button>
+              </div>
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+
+        case 'STUDY_CENTERS':
+          appendMessage('user', '🏫 About NIOS Study Centers (AI)');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                <strong>🏫 Accredited Institution (AI):</strong><br><br>
+                Any regular school affiliated with a recognized board can apply & function as an official NIOS AI. It serves as the student’s primary academic support center.<br><br>
+                <strong>Key Responsibilities of an AI:</strong><br>
+                • Manages admissions, fees, study materials, and exam support<br>
+                • Conducts TMAs and PCPs (internal assessments)<br>
+                • Distributes marksheets and certificates<br>
+                • Shares important updates and schedules
+              </p>
+              ${getQuickActionButtonsHTML(false)}
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+
+        case 'SUPPORT_ALLEN':
+          appendMessage('user', '🤝 Support at ALLEN for NIOS');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                <strong>🤝 How ALLEN Supports Your NIOS Journey:</strong><br><br>
+                • Dedicated Helpdesk for Query Resolution<br>
+                • Complete Admission & Enrolment Guidance<br>
+                • Academic Support for NIOS Board Exams<br>
+                • Regular Updates & Notifications Regarding NIOS<br><br>
+                📞 <strong>Helpline:</strong> 76-9105-9105<br>
+                🌐 <strong>Website:</strong> <a href="https://www.allen.ac.in/NIOS" target="_blank" class="text-sky-600 underline">allen.ac.in/NIOS</a>
+              </p>
+              ${getQuickActionButtonsHTML(false)}
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+
+        case 'WEBINAR':
+          appendMessage('user', '🌐 Attend a Live NIOS Webinar');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                <strong>🌐 ALLEN Live NIOS Webinar:</strong><br>Join our exclusive interactive webinar by senior ALLEN experts to clear all your doubts regarding the NIOS board system.<br><br>
+                ✔ Board Overview<br>
+                ✔ Recognition & Acceptance<br>
+                ✔ Benefits for JEE/NEET Aspirants<br>
+                ✔ Live Q&A - Get Your Doubts Cleared<br><br>
+                🔗 <strong>Register Now:</strong> <a href="https://myallen.in/nioswebinar" target="_blank" class="text-sky-600 font-bold underline">myallen.in/nioswebinar</a>
+              </p>
+              <div class="mt-3.5 p-2 bg-slate-50 rounded-xl border border-slate-100 space-y-1.5">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block px-1.5">Quick Action Buttons:</span>
+                <a href="https://www.allen.ac.in/nios/admissions.asp" target="_blank" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold py-1.5 px-2.5 rounded-lg border border-emerald-100 transition-all text-xs flex items-center justify-between">
+                  <span>📝 Register your interest for admission in NIOS Board</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+                <div class="flex gap-1.5 mt-2">
+                  <button onclick="triggerCallback()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-1.5 rounded text-center text-[10px] flex items-center justify-center gap-1"><i class="fa-solid fa-phone"></i> Call Back</button>
+                  <button onclick="navigateBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-1.5 rounded text-center text-[10px]">🔙 Prev Menu</button>
+                  <button onclick="navigateMainMenu()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-1.5 rounded text-center text-[10px]">🏠 Main Menu</button>
+                </div>
+              </div>
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+
+        case 'VIDEOS':
+          appendMessage('user', '🎥 Informational NIOS Videos');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                <strong>🎥 Informational NIOS Videos:</strong><br>
+                Select a playlist to start watching:
+              </p>
+              <div class="mt-3 space-y-2 text-xs">
+                <div class="p-2 bg-slate-50 border rounded-lg">
+                  <span class="font-bold block mb-1">🔹 1. NIOS Information & Success Stories</span>
+                  <span class="text-slate-500 block mb-2">Contains student success stories and highly informative NIOS-related guide videos.</span>
+                  <a href="https://www.youtube.com/playlist?list=PL46TqiNVZpK-aTZVzfNKv7cwYvnAncfCt" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-md border border-rose-200">
+                    <i class="fa-brands fa-youtube"></i> Watch Playlist
+                  </a>
+                </div>
+                <div class="p-2 bg-slate-50 border rounded-lg">
+                  <span class="font-bold block mb-1">🔹 2. Academic Support for NIOS</span>
+                  <span class="text-slate-500 block mb-2">Dedicated educational content and academic learning support specifically for NIOS students.</span>
+                  <a href="https://www.youtube.com/playlist?list=PL46TqiNVZpK8NDlBwfV-xnWRy6i6kDBgI" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-md border border-rose-200">
+                    <i class="fa-brands fa-youtube"></i> Watch Playlist
+                  </a>
+                </div>
+              </div>
+              ${getQuickActionButtonsHTML()}
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+
+        case 'RESOURCE_CENTER':
+          appendMessage('user', '📂 NIOS Resource Center');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed">
+                Welcome to the <strong>ALLEN NIOS Resource Center</strong>. 🗂️ Here you can access official websites, video archives, real-time news updates, and primary support channels.<br><br>
+                Please choose a resource node below to explore further:
+              </p>
+              <div class="mt-4 space-y-1.5">
+                <a href="https://www.allen.ac.in/nios/" target="_blank" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex justify-between items-center shadow-sm">
+                  <span>🌐 ALLEN NIOS Website</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+                <a href="https://www.youtube.com/playlist?list=PL46TqiNVZpK-aTZVzfNKv7cwYvnAncfCt" target="_blank" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex justify-between items-center shadow-sm">
+                  <span>🎥 Info & Success Stories Playlist</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+                <a href="https://www.youtube.com/playlist?list=PL46TqiNVZpK8NDlBwfV-xnWRy6i6kDBgI" target="_blank" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex justify-between items-center shadow-sm">
+                  <span>📚 Academic Support Playlist</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+                <a href="https://www.allen.ac.in/nios/news-media.asp" target="_blank" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex justify-between items-center shadow-sm">
+                  <span>📰 NIOS in News & Media</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+                <a href="https://www.allen.ac.in/nios/#faqs" target="_blank" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex justify-between items-center shadow-sm">
+                  <span>❓ Frequently Asked Questions (FAQs)</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+                <button onclick="handleResourceSelection('CONTACT')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex justify-between items-center">
+                  <span>📞 Contact ALLEN NIOS Support Desk</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                </button>
+              </div>
+              <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between gap-2">
+                <button onclick="navigateMainMenu()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🏠 Main Menu</button>
+              </div>
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+
+        case 'NEED_HELP':
+          appendMessage('user', '❓ Need Help?');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed text-xs">
+                Email us: <span class="font-bold text-sky-700">nios.support@allen.in</span> with below details:<br><br>
+                • Student's Name<br>
+                • Contact Number<br>
+                • ALLEN Form Number (if already enrolled at ALLEN for Session 2026-27)<br><br>
+                <i>If not enrolled, mention:</i><br>
+                • Preferred ALLEN Center<br>
+                • Preferred Course
+              </p>
+              ${getQuickActionButtonsHTML()}
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          break;
+      }
+
+      if (botResponse) {
+        triggerBotResponse(botResponse);
+      }
+    }
+
+    // --- SUB-MENU LAYER: ABOUT NIOS SUB ROUTING ---
+    function handleAboutNiosSelection(aboutKey) {
+      flowState.navigationHistory.push("ABOUT_NIOS");
+      
+      let resMsg = "";
+      if (aboutKey === 'RECOGNITION') {
+        appendMessage('user', '📜 Board Recognition');
+        resMsg = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>📜 Recognition:</strong><br><br>
+              NIOS certifications are recognized at par with CBSE, CISCE (ICSE), and State Boards. Valid for higher education admissions, government employment, and competitive examinations. As a government-established national board, it ensures academic credibility.<br><br>
+              🔗 <strong>More info:</strong> <a href="https://www.allen.ac.in/nios/recognition.asp" target="_blank" class="text-sky-600 underline">allen.ac.in/nios/recognition.asp</a>
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (aboutKey === 'ACCEPTANCE') {
+        appendMessage('user', '✅ Exam Acceptance');
+        resMsg = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>✅ Exam Acceptance:</strong><br><br>
+              NIOS Board class XII certificates are fully accepted for NEET-UG, JEE (Main & Advanced), CUET, all Universities for higher studies, and Govt & Corporate Jobs.<br><br>
+              🔗 <strong>More info:</strong> <a href="https://www.allen.ac.in/nios/entrance-exam-acceptance.asp" target="_blank" class="text-sky-600 underline">allen.ac.in/nios/entrance-exam-acceptance.asp</a>
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (aboutKey === 'BENEFITS') {
+        appendMessage('user', '🌟 Key Benefits of NIOS');
+        resMsg = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>🌟 7 Unique Benefits of NIOS:</strong><br><br>
+              • Peace of mind - No shortcuts<br>
+              • No daily school attendance<br>
+              • More time for self-study & JEE / NEET preparation<br>
+              • Distribution of board exams<br>
+              • Minimal Cost of Schooling<br>
+              • Time for relaxation and activities<br>
+              • Ease of scoring High in Board Exams
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      }
+      triggerBotResponse(resMsg);
+    }
+
+    // --- SUB-MENU LAYER: ADMISSION SUB ROUTING ---
+    function handleAdmissionSelection(admKey) {
+      if (admKey === 'INTERESTED') {
+        appendMessage('user', '📝 Interested to take Admission in NIOS');
+        const formMsg = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>Register your interest to take admission in NIOS Board:</strong><br><br>
+              This form is for students & parents who intend to take admission in the NIOS Board and require guidance on eligibility, timelines, study center selection, and the comprehensive admission process.<br><br>
+              🔗 <strong>Registration Link:</strong> <a href="https://www.allen.ac.in/nios/admissions.asp" target="_blank" class="text-sky-600 font-bold underline">allen.ac.in/nios/admissions.asp</a>
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+        triggerBotResponse(formMsg);
+      } else if (admKey === 'COURSES') {
+        flowState.navigationHistory.push("ADMISSION_COURSES");
+        appendMessage('user', '📚 Explore the Courses');
+        const coursesMsg = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              Please select the Course you are interested in:
+            </p>
+            <div class="mt-4 space-y-2">
+              <button onclick="handleClassSelection('CLASS_10')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                <span>Secondary Certificate (Class X)</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+              </button>
+              <button onclick="handleClassSelection('CLASS_12')" class="w-full text-left bg-slate-50 hover:bg-emerald-50 text-slate-700 font-semibold py-2 px-3 rounded-lg border border-slate-200 transition text-xs flex items-center justify-between">
+                <span>Sr. Secondary Certificate (Class XII)</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+              </button>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between gap-2">
+              <button onclick="navigateBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🔙 Previous Menu</button>
+              <button onclick="navigateMainMenu()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🏠 Main Menu</button>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+        triggerBotResponse(coursesMsg);
+      }
+    }
+
+    // Class X and Class XII specific flows
+    function handleClassSelection(classCode) {
+      if (classCode === 'CLASS_10') {
+        flowState.navigationHistory.push("CLASS_10_MENU");
+        appendMessage('user', 'Secondary Certificate (Class X)');
+        const class10Details = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              📌 <strong>Eligibility for Class X:</strong><br><br>
+              • Last Class Passed certificate from any recognized board.<br>
+              • Learners with no formal schooling can apply with a self-certificate.<br>
+              • Minimum age: 14 years (No upper age limit).<br><br>
+              <strong>What would you like to know next?</strong>
+            </p>
+            <div class="mt-3 space-y-1.5">
+              <button onclick="handleClassSubSelection('CLASS_10_DOCS')" class="w-full text-left bg-emerald-50/50 hover:bg-emerald-50 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-100 transition text-xs flex items-center justify-between">
+                <span>📄 Documents Required</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+              </button>
+              <button onclick="handleClassSubSelection('CLASS_10_DEADLINES')" class="w-full text-left bg-emerald-50/50 hover:bg-emerald-50 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-100 transition text-xs flex items-center justify-between">
+                <span>⏳ Enrollment Timelines</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+              </button>
+              <button onclick="triggerCallback()" class="w-full text-left bg-emerald-50/50 hover:bg-emerald-50 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-100 transition text-xs flex items-center justify-between">
+                <span>📞 Request a Callback</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+              </button>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between gap-2">
+              <button onclick="navigateBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🔙 Previous Menu</button>
+              <button onclick="navigateMainMenu()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🏠 Main Menu</button>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+        triggerBotResponse(class10Details);
+      } else {
+        flowState.navigationHistory.push("CLASS_12_MENU");
+        appendMessage('user', 'Sr. Secondary Certificate (Class XII)');
+        const class12Details = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              📌 <strong>Eligibility for Class XII:</strong><br><br>
+              • Passed Class X from any recognized board.<br>
+              • Minimum age: 15 years (No upper age limit).<br><br>
+              <strong>What would you like to know next?</strong>
+            </p>
+            <div class="mt-3 space-y-1.5">
+              <button onclick="handleClassSubSelection('CLASS_12_DOCS')" class="w-full text-left bg-emerald-50/50 hover:bg-emerald-50 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-100 transition text-xs flex items-center justify-between">
+                <span>📄 Documents Required</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+              </button>
+              <button onclick="handleClassSubSelection('CLASS_12_DEADLINES')" class="w-full text-left bg-emerald-50/50 hover:bg-emerald-50 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-100 transition text-xs flex items-center justify-between">
+                <span>⏳ Enrollment Timelines</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+              </button>
+              <button onclick="triggerCallback()" class="w-full text-left bg-emerald-50/50 hover:bg-emerald-50 text-emerald-800 font-semibold py-1.5 px-3 rounded-lg border border-emerald-100 transition text-xs flex items-center justify-between">
+                <span>📞 Request a Callback</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+              </button>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between gap-2">
+              <button onclick="navigateBack()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🔙 Previous Menu</button>
+              <button onclick="navigateMainMenu()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🏠 Main Menu</button>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+        triggerBotResponse(class12Details);
+      }
+    }
+
+    // Depth Class detail nodes
+    function handleClassSubSelection(leafCode) {
+      let docText = "";
+      if (leafCode === 'CLASS_10_DOCS') {
+        appendMessage('user', '📄 Documents Required (Class X)');
+        docText = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>📄 Documents Required (Class X):</strong><br><br>
+              • Recent Passport Size Photo & Signature (Black Ink)<br>
+              • Valid ID Proof (Aadhaar Card)<br>
+              • Date of Birth Proof (Birth Certificate/TC)<br>
+              • Address Proof<br>
+              • Class VIII Marksheet or Self Certificate<br>
+              • Caste/Disability Certificate (if applicable)
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (leafCode === 'CLASS_10_DEADLINES') {
+        appendMessage('user', '⏳ Enrollment Timelines (Class X)');
+        docText = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>⏳ Enrollment Timelines:</strong><br><br>
+              • Stream 1 (April Exam): Till 15 September<br>
+              • Stream 1 (Oct Exam): Till 15 March
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (leafCode === 'CLASS_12_DOCS') {
+        appendMessage('user', '📄 Documents Required (Class XII)');
+        docText = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>📄 Documents Required (Class XII):</strong><br><br>
+              • Recent Passport Size Photo & Signature (Black Ink)<br>
+              • Valid ID Proof (Aadhaar Card)<br>
+              • Date of Birth Proof & Local Residence Address Proof<br>
+              • Class X Marksheet (Original)<br>
+              • Caste/Disability Certificate (if applicable)
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else if (leafCode === 'CLASS_12_DEADLINES') {
+        appendMessage('user', '⏳ Enrollment Timelines (Class XII)');
+        docText = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>⏳ Enrollment Timelines:</strong><br><br>
+              • Stream 1 (April Exam): Till 15 September<br>
+              • Stream 1 (Oct Exam): Till 15 March
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      }
+      triggerBotResponse(docText);
+    }
+
+    // --- SUB-MENU LAYER: EXAM DETAILS SUB ROUTING ---
+    function handleExamSelection(examKey) {
+      let examText = "";
+      if (examKey === 'PUBLIC') {
+        appendMessage('user', '📅 Public Exams');
+        examText = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed">
+              <strong>📅 Public Exams:</strong><br><br>
+              • <strong>Exam Schedule:</strong> Conducted twice a year (April-May & October-November)<br>
+              • <strong>Two-Year Gap Rule:</strong> A minimum 2-year gap after Class 10 is required.<br>
+              • <strong>Exam Centres:</strong> School other than existing AI (Mostly KVs)<br>
+              • <strong>Mode of Exam:</strong> Offline (Pen & Paper)<br>
+              • <strong>Duration:</strong> 3 Hours/Subject (Similar to CBSE)
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      } else {
+        appendMessage('user', '📝 Internal Assessment (TMA & PCP)');
+        examText = `
+          <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+            <p class="text-sm leading-relaxed text-slate-850">
+              <strong>📝 Internal Assessment Components:</strong><br><br>
+              <strong>1. TMA (Tutor Marked Assignments):</strong><br>
+              • Carries 20% of theory marks<br>
+              • One Assignment/Subject<br>
+              • 100% Online Process<br>
+              • Evaluated by your assigned AI (Study Center).<br><br>
+              <strong>2. PCP (Personal Contact Program):</strong><br>
+              • Theory (30 Sessions - Optional) & Practical (5 Sessions - Compulsory) support for each subject<br>
+              • Carries 50% of practical marks (10/20)<br>
+              • Conducted directly at your AI (Study Center).<br>
+              • Mandatory attendance for practical PCPs
+            </p>
+            ${getQuickActionButtonsHTML()}
+            <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+          </div>
+        `;
+      }
+      triggerBotResponse(examText);
+    }
+
+    // --- SUB-MENU LAYER: RESOURCE CENTER SUB ROUTING ---
+    function handleResourceSelection(resKey) {
+      let botResponse = "";
+
+      switch(resKey) {
+        case 'CONTACT':
+          appendMessage('user', '📞 Contact ALLEN NIOS Support Desk');
+          botResponse = `
+            <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+              <p class="text-sm leading-relaxed text-xs">
+                Visit Nearest ALLEN Center Helpline Number<br><br>
+                <strong>Need help?</strong> &gt; Email us: <span class="font-semibold text-sky-700">nios.support@allen.in</span> with below details:<br><br>
+                • Student's Name<br>
+                • Contact Number<br>
+                • ALLEN Form Number (if already enrolled at ALLEN for Session 2026-27)<br><br>
+                <i>If not enrolled, mention:</i><br>
+                • Preferred ALLEN Center<br>
+                • Preferred Course
+              </p>
+              ${getQuickActionButtonsHTML()}
+              <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+            </div>
+          `;
+          triggerBotResponse(botResponse);
+          break;
+      }
+    }
+
+    // --- ESCAPE AND NAVIGATION LOGIC CONTROLLERS ---
+
+    // Standard 🏠 Main Menu handler
+    function navigateMainMenu() {
+      appendMessage('user', '🏠 Main Menu');
+      dispatchMainMenu();
+    }
+
+    // Standard 🔙 Previous Menu handler
+    function navigateBack() {
+      appendMessage('user', '🔙 Previous Menu');
+      
+      if (flowState.navigationHistory.length === 0) {
+        dispatchMainMenu();
+        return;
+      }
+
+      // Pop state
+      const targetState = flowState.navigationHistory.pop();
+      
+      if (targetState === "MAIN_MENU") {
+        dispatchMainMenu();
+      } else if (targetState === "ABOUT_NIOS") {
+        handleMenuSelection('ABOUT_NIOS');
+      } else if (targetState === "ADMISSION_COURSES") {
+        handleAdmissionSelection('COURSES');
+      } else if (targetState === "CLASS_10_MENU") {
+        handleClassSelection('CLASS_10');
+      } else if (targetState === "CLASS_12_MENU") {
+        handleClassSelection('CLASS_12');
+      } else {
+        dispatchMainMenu();
+      }
+    }
+
+    // Live Mock Helpdesk Operations
+    function triggerCallback() {
+      appendMessage('user', '📞 Request a Callback');
+      const mockCb = `
+        <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+          <p class="text-sm leading-relaxed">
+            🚀 <strong>Callback Registered!</strong><br><br>
+            Thank you, <strong>${flowState.userProfile.name || 'Student'}</strong>! An ALLEN NIOS Counselor will call you back shortly on your registered number.<br><br>
+            📍 <strong>Helpline Direct:</strong> 76-9105-9105
+          </p>
+          <div class="mt-3 pt-3 border-t border-slate-100 text-center">
+            <button onclick="navigateMainMenu()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-1.5 px-2 rounded text-center text-xs">🏠 Main Menu</button>
+          </div>
+          <div class="text-[9px] text-slate-400 mt-2 text-right select-none">${getFormattedTime()}</div>
+        </div>
+      `;
+      triggerBotResponse(mockCb);
+    }
+
+    // Handles fallback text entry when in main phases
+    function handleGeneralInputFallback(input) {
+      const sanitized = input.toLowerCase().trim();
+      
+      if (sanitized === 'menu' || sanitized === 'main menu' || sanitized === 'home') {
+        dispatchMainMenu();
+        return;
+      }
+      
+      const textHint = `
+        <div class="bg-white text-slate-800 rounded-r-lg rounded-bl-lg mr-12 shadow-sm border border-slate-200/50 px-3.5 py-2 max-w-lg relative">
+          <p class="text-sm leading-relaxed">
+            💡 <strong>Help Desk Hint:</strong><br>
+            Please use the interactive buttons on the screen or type <strong>"menu"</strong> to return to the Main Menu.
+          </p>
+          <div class="text-[9px] text-slate-400 mt-1 text-right select-none">${getFormattedTime()}</div>
+        </div>
+      `;
+      triggerBotResponse(textHint, 400);
+    }
+
+    // Bypass helper for quick demos
+    function skipOnboarding() {
+      flowState.userProfile = {
+        name: "Abhishek Sharma",
+        email: "abhishek@myallen.com",
+        class: "12th Passed",
+        board: "CBSE",
+        stream: "JEE",
+        location: "Kota, Rajasthan"
+      };
+      flowState.currentPhase = "MAIN_MENU";
+      flowState.onboardingStep = 6;
+      updateProfileDisplay();
+
+      const sLink = document.getElementById('shortcut-mainmenu');
+      sLink.removeAttribute('disabled');
+      sLink.className = "p-2.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg text-xs font-semibold border border-emerald-200 transition-all text-center cursor-pointer";
+
+      chatScroller.innerHTML = "";
+      dispatchMainMenu();
+    }
+
+    // Shortcut: Jump to Main Menu Button
+    function triggerMainMenu() {
+      if (flowState.onboardingStep < 6) {
+        skipOnboarding();
+      } else {
+        chatScroller.innerHTML = "";
+        dispatchMainMenu();
+      }
+    }
+
+    // Synchronize UI State Cards in Dashboard
+    function updateProfileDisplay() {
+      document.getElementById('state-phase').textContent = flowState.currentPhase;
+      
+      // Toggle phase classes
+      const pBadge = document.getElementById('state-phase');
+      if (flowState.currentPhase === 'ONBOARDING') {
+        pBadge.className = "text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full";
+      } else {
+        pBadge.className = "text-xs font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full";
+      }
+
+      // Sync user metrics
+      const up = flowState.userProfile;
+      updateField('data-name', up.name, "Waiting for input...");
+      updateField('data-email', up.email, "Waiting for input...");
+      updateField('data-class', up.class, "Waiting for selection...");
+      updateField('data-board', up.board, "Waiting for selection...");
+      updateField('data-stream', up.stream, "Waiting for selection...");
+      updateField('data-location', up.location, "Waiting for input...");
+    }
+
+    // Update individual state card
+    function updateField(id, val, placeholder) {
+      const el = document.getElementById(id);
+      if (val) {
+        el.textContent = val;
+        el.className = "font-bold text-slate-800";
+      } else {
+        el.textContent = placeholder;
+        el.className = "font-semibold text-slate-400 italic";
+      }
+    }
+  </script>
+</body>
+</html>
